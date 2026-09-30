@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-2027 Transfers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  html, body, #map { height:100%; margin:0; }
+  body, select, button, .leaflet-container, .leaflet-tooltip { font-family: "Mukta", -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  body { color:#222; }
+  #card { position:absolute; top:12px; left:12px; z-index:1000; width:290px; max-height:calc(100% - 24px);
+          overflow-y:auto; background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 12px rgba(0,0,0,.25); }
+  h1 { font-size:20px; margin:0 0 6px; }
+  p { margin:0 0 10px; font-size:14px; line-height:1.4; color:#555; }
+  select { width:100%; padding:9px; font-size:15px; border:1px solid #bbb; border-radius:6px; }
+  h3 { font-size:14px; margin:14px 0 4px; }
+  .red { color:#6D6D6D; } .blue { color:#FC0140; }
+  ul { margin:0; padding-left:18px; font-size:14px; line-height:1.5; }
+  button { margin-top:12px; padding:8px 12px; font-size:14px; border:1px solid #bbb; background:#f7f7f7; border-radius:6px; cursor:pointer; }
+  .name { background:#fff; border:1px solid #999; padding:1px 5px; font-size:12px; font-weight:600; }
+  @media (max-width:600px) { #card { top:auto; bottom:0; left:0; right:0; width:auto; max-height:45%; border-radius:12px 12px 0 0; } }
+</style></head>
+<body>
+<div id="map"></div>
+<div id="card"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+var DATA = {"schools": {"Air Force": [39.008914, -104.885408], "Alabama": [33.21439966, -87.54576647], "Alaska": [61.18955412, -149.8261349], "Arizona": [32.23286613, -110.9500859], "Arizona State": [33.41728, -111.935499], "Arkansas": [36.06564171, -94.17785232], "Auburn": [32.600201, -85.492409], "Ball State": [40.19996994, -85.40877746], "Boise State": [43.60440317, -116.2057889], "Bowling Green": [41.377036, -83.637531], "Bridgeport": [41.16476623, -73.19000592], "Brockport": [43.21185142, -77.95150829], "Brown": [41.82685309, -71.40292511], "BYU": [40.250851, -111.649281], "California": [37.875759, -122.24851], "Centenary": [32.48333469, -93.73083375], "Central Michigan": [43.586742, -84.774813], "Clemson": [34.677329, -82.834463], "Cornell": [42.448713, -76.476535], "Cortland": [42.597308, -76.191855], "Denver": [39.68143947, -104.9615317], "Eastern Michigan": [42.250277, -83.625156], "Fisk": [36.16912018, -86.80567149], "Florida": [29.638248, -82.361195], "George Washington": [38.8990964, -77.04627687], "Georgia": [33.937727, -83.37143], "Greenville": [38.89534285, -89.40897712], "Gustavus Adolphus": [44.324968, -93.971928], "Hamline": [44.96569593, -93.163983], "Illinois": [40.1083116, -88.22848166], "Illinois State": [40.50972361, -88.9923395], "Iowa": [41.66069518, -91.535698], "Iowa State": [42.025303, -93.65024], "Ithaca": [42.42263969, -76.49505672], "Kent State": [41.151603, -81.337128], "Kentucky": [38.028761, -84.502517], "LIU": [40.82071395, -73.59367827], "LSU": [30.41273915, -91.18072747], "Maryland": [38.98860655, -76.93970412], "Michigan": [42.27803, -83.736564], "Michigan State": [42.72476, -84.473639], "Minnesota": [44.97788627, -93.23535212], "Missouri": [38.941015, -92.326429], "N.C. State": [35.78511061, -78.67451716], "Nebraska": [40.82178693, -96.70066318], "New Hampshire": [43.13423546, -70.9345123], "North Carolina": [35.91216532, -79.05096942], "Northern Illinois": [41.93379093, -88.7660647], "Ohio State": [39.99949343, -83.00879179], "Oklahoma": [35.20806903, -97.44569235], "Oregon State": [44.563109, -123.278711], "Penn": [39.95100193, -75.19361788], "Penn State": [40.800732, -77.861644], "Pittsburgh": [40.44259861, -79.95410478], "Rhode Island College": [41.84265959, -71.46691478], "Rutgers": [40.49953534, -74.44700726], "Sacramento State": [38.55990059, -121.422416], "San Jose State": [37.33750869, -121.8804585], "SEMO": [37.3157504, -89.52911878], "Simpson": [41.36550276, -93.56347098], "Southern Connecticut": [41.33185223, -72.94880617], "Southern Utah": [37.674617, -113.070146], "Springfield": [42.10503331, -72.55568789], "Stanford": [37.4329738, -122.1750451], "Temple": [39.980712, -75.15845161], "Texas Woman's": [33.227002, -97.129088], "Towson": [39.3930079, -76.61226756], "UC Davis": [38.53820558, -121.75103], "UCLA": [34.0688923, -118.4439005], "Ursinus": [40.19423605, -75.45802908], "Utah": [40.76248351, -111.846044], "Utah State": [41.740748, -111.81391], "Utica": [43.09448141, -75.27633298], "UW-Eau Claire": [44.79843117, -91.50043158], "UW-La Crosse": [43.81539006, -91.23012479], "UW-Oshkosh": [44.02498538, -88.54928178], "UW-Stout": [44.871765, -91.925269], "UW-Whitewater": [42.835563, -88.74236834], "Washington": [47.65577518, -122.3108022], "West Chester": [39.95195802, -75.59850508], "West Virginia": [39.63468, -79.953926], "Western Michigan": [42.28079931, -85.61348244], "Wilberforce": [39.707993, -83.879358], "William and Mary": [37.273294, -76.719631], "Winona State": [44.04657217, -91.64447029], "Yale": [41.31230826, -72.92251114]}, "moves": [["Arizona", "California", ["Jillian Silvers"]], ["Arizona", "Kentucky", ["Teagan White"]], ["Arizona State", "Nebraska", ["Isabella Kowan"]], ["Arizona State", "Penn", ["Tiara Platkin"]], ["Arkansas", "Arizona State", ["Julianna Weeks"]], ["Arkansas", "Georgia", ["Joscelyn Roberson"]], ["Arkansas", "Maryland", ["Addison Bare"]], ["Arkansas", "Nebraska", ["Grace Drexler"]], ["Arkansas", "Ohio State", ["Ja'leigh Lang"]], ["Auburn", "Nebraska", ["Adriana Consoli"]], ["BYU", "Arizona", ["Lacey Gardner"]], ["BYU", "UCLA", ["Alilah Alvarado"]], ["Boise State", "Washington", ["Anna Ferguson"]], ["Bowling Green", "Maryland", ["Kayla Shaw"]], ["Brockport", "Rhode Island College", ["Olivia Melo"]], ["California", "Stanford", ["Ondine Achampong", "Mya Wiley"]], ["Denver", "North Carolina", ["Cecilia Cooley"]], ["Fisk", "Alaska", ["Aiyana Thomas"]], ["Fisk", "Southern Connecticut", ["Nadia Davidson", "Hadassah Diggs"]], ["George Washington", "Maryland", ["Lola Montevago"]], ["Georgia", "California", ["Aberdeen O'Driscoll"]], ["Georgia", "LSU", ["Ariel Posen"]], ["Georgia", "Maryland", ["Nicole King"]], ["Greenville", "Brockport", ["Alessia Russo"]], ["Illinois", "California", ["Ava Banks"]], ["Illinois", "Towson", ["Kennedy Brown"]], ["Illinois", "Utah", ["Arielle Ward"]], ["Illinois State", "Pittsburgh", ["Ally Lau"]], ["Illinois State", "Washington", ["Jada Beswick"]], ["Iowa State", "Arkansas", ["Noelle Adams", "Kaia Bochow"]], ["Iowa State", "Clemson", ["Haylee Hardin"]], ["Iowa State", "Illinois", ["Peyton Nock"]], ["Iowa State", "Iowa", ["Ella Schell"]], ["Iowa State", "Minnesota", ["Frederique Sgarbossa"]], ["Iowa State", "Nebraska", ["Aubree Guinee"]], ["Iowa State", "New Hampshire", ["Finley Weldon"]], ["Iowa State", "Rutgers", ["Chloe Hammond"]], ["Iowa State", "Utah State", ["Lauren O'Brochta"]], ["Kent State", "Iowa", ["Jersey Bingman"]], ["Kentucky", "Clemson", ["Anna Flynn Cashion"]], ["LSU", "Auburn", ["Molly Brinkman"]], ["Michigan", "Illinois", ["Paige Thaxton"]], ["Michigan State", "Nebraska", ["Isabel Biro", "Lilia Cosman", "Amy Doyle"]], ["Minnesota", "Arkansas", ["Emma Slevin"]], ["Minnesota", "LSU", ["Jordyn Lyden"]], ["Missouri", "California", ["Lisa Szeibert"]], ["Nebraska", "Arizona State", ["Merideth Brandt"]], ["Nebraska", "Auburn", ["Lauren Hollifield"]], ["Nebraska", "Illinois State", ["Emalee Frost"]], ["Nebraska", "SEMO", ["Reese Baker"]], ["Nebraska", "Temple", ["Ahnna Kalmes"]], ["New Hampshire", "Arizona", ["McCall McMullen"]], ["New Hampshire", "Cortland", ["Taylor Beers"]], ["Northern Illinois", "Western Michigan", ["Mikayla Brown"]], ["Ohio State", "Arizona", ["Karleigh Reutzel"]], ["Ohio State", "Maryland", ["Rylee Guevara"]], ["Oregon State", "Missouri", ["Jennifer McMillan"]], ["Oregon State", "Sacramento State", ["Katie Rude"]], ["Penn", "LSU", ["Skyelar Kerico"]], ["Penn State", "Clemson", ["Ava Piedrahita"]], ["Rhode Island College", "Bridgeport", ["Liz Shrewsbury"]], ["Rhode Island College", "Utica", ["Hannah Radcliff"]], ["SEMO", "Southern Connecticut", ["Genesis Bosque"]], ["SEMO", "UW-Oshkosh", ["Amaia McKinnie"]], ["San Jose State", "UW-Oshkosh", ["Brianna Baechle"]], ["Southern Connecticut", "LIU", ["Jordan Villani"]], ["Southern Connecticut", "New Hampshire", ["Maria Chronopoulos"]], ["Temple", "George Washington", ["Reese DeHaan"]], ["Temple", "New Hampshire", ["Jade Harden"]], ["UCLA", "Arizona State", ["Lauren Little"]], ["UW-Whitewater", "Cortland", ["Carly Musschoot"]], ["UW-Whitewater", "UW-Stout", ["Claire Donahue"]], ["Utah", "Auburn", ["Olivia Kennedy"]], ["Utah State", "Arkansas", ["Nyla Morabito"]], ["Utica", "Kent State", ["Emmy Graff"]], ["Washington", "Iowa", ["Caitlin McWilliams"]], ["Washington", "Utah", ["Lilly Tubbs"]], ["West Chester", "Rhode Island College", ["Sophie Salvatori"]], ["Western Michigan", "Bowling Green", ["Peyton Stanos"]], ["Wilberforce", "Greenville", ["Mya Caines", "Diamond Cook"]]]};
+var schools = DATA.schools, moves = DATA.moves;
+var names = Object.keys(schools);
+
+var map = L.map("map", { minZoom: 3, maxZoom: 9 });
+L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+  { attribution: "Tiles &copy; Esri" }).addTo(map);
+
+// City and state labels only appear once you zoom in (change 6 to show them sooner or later)
+var LABEL_ZOOM = 6;
+var labels = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}");
+function updateLabels() {
+  if (map.getZoom() >= LABEL_ZOOM) { if (!map.hasLayer(labels)) labels.addTo(map); }
+  else if (map.hasLayer(labels)) { map.removeLayer(labels); }
+}
+map.on("zoomend", updateLabels);
+
+var USA = [[24.5, -125], [49.5, -66.5]];
+map.fitBounds(USA);
+updateLabels();
+
+var layer = L.layerGroup().addTo(map);
+var card = document.getElementById("card");
+
+function dot(name, color, showName) {
+  var d = L.circleMarker(schools[name], { radius: 7, color: "#fff", weight: 2, fillColor: color, fillOpacity: 1 });
+  d.bindTooltip(name, { permanent: !!showName, direction: "top", offset: [0, -6], className: showName ? "name" : "" });
+  d.on("click", function (e) { L.DomEvent.stopPropagation(e); show(name); });
+  return d;
+}
+
+// Gentle curve so a move in each direction between two schools does not sit on top of the other
+function curve(a, b) {
+  var dy = b[0] - a[0], dx = b[1] - a[1], pts = [];
+  var cy = (a[0] + b[0]) / 2 + dx * 0.12, cx = (a[1] + b[1]) / 2 - dy * 0.12;
+  for (var i = 0; i <= 20; i++) {
+    var t = i / 20, u = 1 - t;
+    pts.push([u*u*a[0] + 2*u*t*cy + t*t*b[0], u*u*a[1] + 2*u*t*cx + t*t*b[1]]);
+  }
+  return pts;
+}
+
+// Small arrow at the middle of a line, pointing the way the gymnast moved
+function arrow(pts, color) {
+  var p1 = map.latLngToLayerPoint(pts[9]), p2 = map.latLngToLayerPoint(pts[11]);
+  var angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+  var svg = '<svg width="16" height="16" viewBox="0 0 16 16" style="transform:rotate(' + angle + 'deg)">' +
+            '<path d="M3 2 L14 8 L3 14 Z" fill="' + color + '" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  return L.marker(pts[10], {
+    icon: L.divIcon({ html: svg, className: "", iconSize: [16, 16], iconAnchor: [8, 8] }),
+    interactive: false
+  });
+}
+
+function overview() {
+  layer.clearLayers();
+  moves.forEach(function (m) {
+    L.polyline(curve(schools[m[0]], schools[m[1]]),
+      { color: "#d0d0d0", weight: 1, opacity: 1, interactive: false }).addTo(layer);
+  });
+  names.forEach(function (n) { dot(n, "#444").addTo(layer); });
+  var options = names.map(function (n) { return "<option>" + n + "</option>"; }).join("");
+  card.innerHTML =
+    "<h1>2026-2027 Transfers</h1>" +
+    "<p>Click a dot on the map, or pick a school below, to see where its gymnasts went and where they came from.</p>" +
+    "<select id='pick'><option value=''>Choose a school...</option>" + options + "</select>";
+  document.getElementById("pick").onchange = function () { if (this.value) show(this.value); };
+}
+
+function show(name) {
+  layer.clearLayers();
+  var PINK = "#FC0140", GRAY = "#6D6D6D";
+  var to = [], from = [], toSet = {}, fromSet = {};
+
+  moves.forEach(function (m) {
+    var a = m[0], b = m[1], who = m[2], n = who.length;
+    if (a === name) { to.push(b + " (" + who.join(", ") + ")"); toSet[b] = true; }
+    if (b === name) { from.push(a + " (" + who.join(", ") + ")"); fromSet[a] = true; }
+    if (a === name || b === name) {
+      var pts = curve(schools[a], schools[b]), color = a === name ? GRAY : PINK;
+      L.polyline(pts, { color: color, weight: 2 + n, opacity: 1 }).addTo(layer);
+      arrow(pts, color).addTo(layer);
+    }
+  });
+
+  names.forEach(function (n) {
+    if (n === name) return;
+    if (toSet[n] || fromSet[n]) dot(n, toSet[n] ? GRAY : PINK, true).addTo(layer);
+  });
+  dot(name, "#222", true).addTo(layer);
+
+  function list(items, empty) {
+    return items.length ? "<ul><li>" + items.join("</li><li>") + "</li></ul>" : "<p>" + empty + "</p>";
+  }
+  card.innerHTML =
+    "<h1>" + name + "</h1>" +
+    (!to.length && !from.length ? "<p>No transfers</p>" :
+      "<h3 class='blue'>Transferred to " + name + " from:</h3>" + list(from, "No transfers in") +
+      "<h3 class='red'>Transferred from " + name + " to:</h3>" + list(to, "No transfers out")) +
+    "<button id='back'>&larr; Back to all schools</button>";
+  document.getElementById("back").onclick = overview;
+}
+
+map.on("click", overview);
+overview();
+</script>
+</body></html>
