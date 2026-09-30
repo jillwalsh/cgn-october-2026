@@ -93,7 +93,8 @@ function overview() {
   var options = names.map(function (n) { return "<option>" + n + "</option>"; }).join("");
   card.innerHTML =
     "<h1>2026-2027 Transfers</h1>" +
-    "<p>Click a dot on the map, or pick a school below, to see where its gymnasts went and where they came from.</p>" +
+    "<p>CWhere are gymnasts headed in 2026-2027? Click on a dot on the map, or pick a school below, to see its transfers heading into the 2027 season.</p>" +
+    "<p>Transfers in are shown in pink and transfers out are in gray. Click anywhere to reset the map.</p>" +
     "<select id='pick'><option value=''>Choose a school...</option>" + options + "</select>";
   document.getElementById("pick").onchange = function () { if (this.value) show(this.value); };
 }
